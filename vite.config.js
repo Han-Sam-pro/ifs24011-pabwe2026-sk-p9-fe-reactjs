@@ -7,6 +7,20 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 1500,
   },
+  // "npm start" di hosting (Delcom nodejs-reactjs): sajikan hasil build di $PORT.
+  // allowedHosts: true agar domain *.s1if.cloud tidak ditolak oleh Vite.
+  preview: {
+    host: '0.0.0.0',
+    allowedHosts: true,
+  },
+  // Dipakai "bun run start" / "npm start" di hosting: melayani hasil build (dist)
+  // dengan SPA fallback pada PORT dari platform (mis. 6638).
+  preview: {
+    host: true,
+    port: Number(process.env.PORT) || 4173,
+    strictPort: true,
+    allowedHosts: true,
+  },
   server: {
     port: 5174,
     proxy: {

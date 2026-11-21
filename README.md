@@ -85,3 +85,24 @@ Frontend dan backend dideploy sebagai **dua website**:
    }
    ```
 4. Backend sudah mengizinkan CORS dari origin mana pun (header `Authorization` didukung), jadi tidak perlu konfigurasi tambahan di backend.
+
+## CI/CD Jenkins
+
+`Jenkinsfile` di root repo menjalankan:
+
+1. **Checkout** (`alpine:3.21`)
+2. **Install Dependencies**: `npm ci` (`node:24-alpine`, cache volume `cicd-npm-cache`)
+3. **Test**: `npm test` (Vitest + coverage, threshold 100%)
+4. **Build Application**: `npm run build` → `dist/` (memakai `.env.production`)
+5. **Trivy Security Scan**: `package-lock.json`, severity HIGH/CRITICAL, exit-code 1
+6. **Package Application**: `git archive` source code (tanpa `.env`, `node_modules`, `dist`, `coverage`)
+7. **Publish Application** & **Deploy Application**: sama dengan pipeline backend
+   (butuh `URL_REDEPLOY`, `URL_PROGRESS`, `DEPLOY_TOKEN`, `WEBSITE_ID` di job Jenkins).
+
+Node.js minimal 22.22 / 24.15 (syarat jsdom & Vitest), karena itu dipakai image `node:24-alpine`.
+
+## Menjalankan di hosting Node.js (`npm start`)
+
+`npm start` = `vite build` lalu `vite preview` di `0.0.0.0:$PORT` (default 4173), lengkap dengan
+SPA fallback (refresh `/author`, `/posts/:slug` tidak 404). Dipakai jika hosting (mis. Delcom
+`nodejs-reactjs`) menjalankan aplikasi dengan `npm start`.

@@ -25,3 +25,8 @@ dist-ssr
 
 # Coverage Vitest
 coverage
+
+# Artefak pipeline Jenkins
+latest-app.zip
+trivy-results.sarif
+.trivy-cache/
