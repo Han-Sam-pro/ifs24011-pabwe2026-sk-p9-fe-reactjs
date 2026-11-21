@@ -62,3 +62,26 @@ src/
     │           AuthorDashboard, PostStats, PostModal, AiPostGeneratorModal
     └── admin/  api, AdminDashboard
 ```
+
+## Deploy ke Hosting Delcom (terpisah dari backend)
+
+Frontend dan backend dideploy sebagai **dua website**:
+
+| Website | Isi |
+|---|---|
+| `https://ifs24011-pabwe2026-sk-p9-be-golang-gin.s1if.cloud` | Backend REST API (Golang Gin) |
+| `https://ifs24011-pabwe2026-sk-p9-fe-reactjs.s1if.cloud` | Frontend SPA (hasil `npm run build`) |
+
+1. `.env.production` (ikut di-commit, bukan rahasia) berisi
+   `VITE_API_BASE_URL=https://ifs24011-pabwe2026-sk-p9-be-golang-gin.s1if.cloud`.
+   `npm run build` otomatis memakainya. Jika dashboard Delcom frontend punya tab `.env`,
+   isi variabel yang sama di sana (nilai dashboard menimpa file).
+2. Variabel harus diawali `VITE_` dan dibaca **saat build**, jadi setelah mengubahnya website harus di-build/deploy ulang.
+3. SPA fallback (agar refresh `/author`, `/posts/:slug` tidak 404). Jika Delcom memakai Nginx, pastikan ada:
+
+   ```nginx
+   location / {
+       try_files $uri $uri/ /index.html;
+   }
+   ```
+4. Backend sudah mengizinkan CORS dari origin mana pun (header `Authorization` didukung), jadi tidak perlu konfigurasi tambahan di backend.
