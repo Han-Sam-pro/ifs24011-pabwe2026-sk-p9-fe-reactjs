@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Swal from 'sweetalert2'
-import App, { parseRoute, resolveRedirect } from './App'
+import App, { parseRoute, resolveAuthMode, resolveRedirect } from './App'
 import { logout } from './features/auth/api/authApi'
 import { AUTH_EXPIRED_EVENT, getToken, setSession } from './helpers/apiHelper'
 
@@ -20,8 +20,8 @@ vi.mock('./features/blog/components/PublicArticleDetail', () => ({ default: ({ s
 vi.mock('./features/blog/components/AuthorDashboard', () => ({ default: ({ user }) => <p>Workspace {user.name}</p> }))
 vi.mock('./features/admin/components/AdminDashboard', () => ({ default: () => <p>Panel Admin</p> }))
 vi.mock('./features/auth/components/AuthPage', () => ({
-  default: ({ mode, onLogin }) => (
-    <div>
+  default: ({ mode, onLogin, showHomeLink }) => (
+    <div data-testid="auth-page" data-home={String(showHomeLink)}>
       <p>Auth {mode}</p>
       <button onClick={() => onLogin({ token: 'tok-m', user: { id: 2, name: 'Budi', role: 'member' } })}>login-member</button>
     </div>
@@ -67,16 +67,31 @@ describe('parseRoute & resolveRedirect', () => {
   })
 })
 
+describe('resolveAuthMode', () => {
+  it('tamu di beranda/detail melihat login; pengguna login melihat halaman biasa', () => {
+    expect(resolveAuthMode({ name: 'login' }, member)).toBe('login')
+    expect(resolveAuthMode({ name: 'register' }, null)).toBe('register')
+    expect(resolveAuthMode({ name: 'public' }, null)).toBe('login')
+    expect(resolveAuthMode({ name: 'detail' }, null)).toBe('login')
+    expect(resolveAuthMode({ name: 'public' }, member)).toBeNull()
+    expect(resolveAuthMode({ name: 'notfound' }, null)).toBeNull()
+  })
+})
+
 describe('App', () => {
   beforeEach(() => {
     goTo('/')
     logout.mockResolvedValue(null)
   })
 
-  it('beranda publik, navigasi SPA, popstate, dan 404', async () => {
+  it('beranda (setelah login), navigasi SPA, popstate, dan 404', async () => {
     const user = userEvent.setup()
+    setSession('tok', member)
     render(<App />)
     expect(screen.getByText('Halaman Publik')).toBeInTheDocument()
+    await user.click(screen.getByText('buka-login'))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    await user.click(screen.getByText('tutup-modal'))
     await user.click(screen.getByText('buka-artikel'))
     expect(screen.getByText('Detail halo')).toBeInTheDocument()
     expect(window.location.pathname).toBe('/posts/halo')
@@ -90,12 +105,32 @@ describe('App', () => {
     expect(screen.getByText('Halaman Publik')).toBeInTheDocument()
   })
 
+  it('tamu yang membuka / atau /posts/:slug langsung melihat halaman login (tanpa redirect)', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    expect(screen.getByText('Auth login')).toBeInTheDocument()
+    expect(screen.getByTestId('auth-page')).toHaveAttribute('data-home', 'false')
+    expect(window.location.pathname).toBe('/')
+    expect(screen.queryByText('Halaman Publik')).not.toBeInTheDocument()
+    await user.click(screen.getByText('login-member'))
+    expect(window.location.pathname).toBe('/author')
+    expect(screen.getByText('Workspace Budi')).toBeInTheDocument()
+  })
+
+  it('tamu di /posts/:slug juga melihat login', () => {
+    goTo('/posts/halo')
+    render(<App />)
+    expect(screen.getByText('Auth login')).toBeInTheDocument()
+    expect(window.location.pathname).toBe('/posts/halo')
+  })
+
   it('rute terproteksi mengarahkan tamu ke /login lalu login member', async () => {
     const user = userEvent.setup()
     goTo('/author')
     render(<App />)
     await waitFor(() => expect(window.location.pathname).toBe('/login'))
     expect(screen.getByText('Auth login')).toBeInTheDocument()
+    expect(screen.getByTestId('auth-page')).toHaveAttribute('data-home', 'true')
     await user.click(screen.getByText('login-member'))
     expect(window.location.pathname).toBe('/author')
     expect(screen.getByText('Workspace Budi')).toBeInTheDocument()
@@ -110,11 +145,12 @@ describe('App', () => {
 
   it('modal login dari navbar: tutup, lalu login admin ke /admin', async () => {
     const user = userEvent.setup()
+    goTo('/halaman-aneh')
     render(<App />)
     await user.click(screen.getByText('Masuk'))
     await user.click(screen.getByText('tutup-modal'))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    await user.click(screen.getByText('buka-login'))
+    await user.click(screen.getByText('Masuk'))
     await user.click(screen.getByText('login-admin'))
     expect(window.location.pathname).toBe('/admin')
     expect(screen.getByText('Panel Admin')).toBeInTheDocument()
@@ -143,7 +179,7 @@ describe('App', () => {
     await user.click(screen.getByLabelText('Keluar'))
     await waitFor(() => expect(window.location.pathname).toBe('/'))
     expect(getToken()).toBeNull()
-    expect(screen.getByText('Masuk')).toBeInTheDocument()
+    expect(screen.getByText('Auth login')).toBeInTheDocument()
   })
 
   it('sesi kedaluwarsa (401) mengeluarkan pengguna', async () => {
@@ -156,6 +192,7 @@ describe('App', () => {
 
   it('tema dapat diganti dari navbar', async () => {
     const user = userEvent.setup()
+    setSession('tok', member)
     render(<App />)
     await user.click(screen.getByLabelText('Ganti tema'))
     expect(document.documentElement.classList.contains('dark')).toBe(true)

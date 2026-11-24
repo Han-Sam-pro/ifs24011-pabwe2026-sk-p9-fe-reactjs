@@ -39,6 +39,14 @@ describe('AuthPage - login', () => {
   })
 })
 
+describe('AuthPage - halaman awal', () => {
+  it('menyembunyikan tautan beranda saat showHomeLink=false', () => {
+    render(<AuthPage mode="login" onLogin={vi.fn()} onNavigate={vi.fn()} showHomeLink={false} />)
+    expect(screen.queryByText('Kembali ke beranda')).not.toBeInTheDocument()
+    expect(document.getElementById('login-username')).toBeInTheDocument()
+  })
+})
+
 describe('AuthPage - register', () => {
   async function fill(user, { username = 'budi', password = 'rahasia', confirm = 'rahasia' } = {}) {
     await user.type(screen.getByLabelText('Nama Lengkap'), 'Budi Santoso')

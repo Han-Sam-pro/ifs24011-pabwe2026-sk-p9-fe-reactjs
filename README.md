@@ -36,8 +36,8 @@ Fallback SPA sudah disiapkan: `public/_redirects` (Netlify) dan `vercel.json` (V
 
 | Path | Komponen | Akses |
 |---|---|---|
-| `/`, `/public` | PublicArticleList | Publik |
-| `/posts/:slug` | PublicArticleDetail | Publik |
+| `/`, `/public` | PublicArticleList (tamu melihat form login di URL yang sama) | Login dulu |
+| `/posts/:slug` | PublicArticleDetail (tamu melihat form login di URL yang sama) | Login dulu |
 | `/author` | AuthorDashboard | Penulis (login) |
 | `/admin` | AdminDashboard | Admin |
 | `/login` | AuthPage (`mode="login"`, input `#login-username`, `#login-password`, `#login-submit`) | Publik |

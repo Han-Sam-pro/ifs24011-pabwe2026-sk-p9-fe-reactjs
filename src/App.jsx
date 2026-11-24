@@ -21,6 +21,17 @@ export function parseRoute(pathname) {
   return { name: 'notfound', path }
 }
 
+// Rute publik yang, untuk tamu (belum login), menampilkan halaman login
+// langsung di URL yang sama (tanpa redirect): halaman awal = Login.
+export const GUEST_LOGIN_ROUTES = ['public', 'detail']
+
+// Menentukan mode halaman autentikasi yang harus ditampilkan, atau null.
+export function resolveAuthMode(route, user) {
+  if (route.name === 'login' || route.name === 'register') return route.name
+  if (!user && GUEST_LOGIN_ROUTES.includes(route.name)) return 'login'
+  return null
+}
+
 // Menentukan redirect berdasarkan hak akses rute.
 export function resolveRedirect(route, user) {
   if ((route.name === 'author' || route.name === 'admin') && !user) return '/login'
@@ -76,8 +87,9 @@ export default function App() {
 
   if (redirect) return null
 
-  if (route.name === 'login' || route.name === 'register') {
-    return <AuthPage mode={route.name} onLogin={handleLogin} onNavigate={navigate} />
+  const authMode = resolveAuthMode(route, user)
+  if (authMode) {
+    return <AuthPage mode={authMode} onLogin={handleLogin} onNavigate={navigate} showHomeLink={!GUEST_LOGIN_ROUTES.includes(route.name)} />
   }
 
   let page

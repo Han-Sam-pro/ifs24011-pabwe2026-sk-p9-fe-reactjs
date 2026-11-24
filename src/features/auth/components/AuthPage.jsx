@@ -139,7 +139,7 @@ export function RegisterForm({ onRegistered, onSwitchToLogin }) {
 }
 
 // Halaman login (/login) dan registrasi (/register) mandiri.
-export default function AuthPage({ mode, onLogin, onNavigate }) {
+export default function AuthPage({ mode, onLogin, onNavigate, showHomeLink = true }) {
   const isLogin = mode === 'login'
   return (
     <div className="flex min-h-screen">
@@ -158,9 +158,11 @@ export default function AuthPage({ mode, onLogin, onNavigate }) {
 
       <main className="flex flex-1 items-center justify-center p-6">
         <div className="w-full max-w-md space-y-6">
-          <button type="button" onClick={() => onNavigate('/')} className="flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-brand">
-            <IconArrowLeft size={16} /> Kembali ke beranda
-          </button>
+          {showHomeLink && (
+            <button type="button" onClick={() => onNavigate('/')} className="flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-brand">
+              <IconArrowLeft size={16} /> Kembali ke beranda
+            </button>
+          )}
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight">{isLogin ? 'Selamat datang kembali' : 'Buat akun penulis'}</h1>
             <p className="mt-1 text-slate-500 dark:text-slate-400">
