@@ -38,3 +38,18 @@ body {
 .article-body .toastui-editor-contents h2 {
   @apply mt-8 border-0;
 }
+
+/* Kontras placeholder editor Toast UI (WCAG AA) */
+.toastui-editor-defaultUI .placeholder {
+  color: #64748b !important;
+}
+.dark .toastui-editor-defaultUI .placeholder {
+  color: #94a3b8 !important;
+}
+/* Kontras tab Markdown/WYSIWYG Toast UI (spesifisitas lebih tinggi dari CSS bawaan) */
+.toastui-editor-defaultUI .toastui-editor-mode-switch .tab-item {
+  color: #475569;
+}
+.dark .toastui-editor-defaultUI .toastui-editor-mode-switch .tab-item {
+  color: #cbd5e1;
+}

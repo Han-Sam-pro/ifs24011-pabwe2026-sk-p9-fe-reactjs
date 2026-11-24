@@ -1,15 +1,24 @@
-import { useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import StickyNavbar from './features/blog/components/StickyNavbar'
 import PublicArticleList from './features/blog/components/PublicArticleList'
-import PublicArticleDetail from './features/blog/components/PublicArticleDetail'
-import AuthorDashboard from './features/blog/components/AuthorDashboard'
-import AdminDashboard from './features/admin/components/AdminDashboard'
 import AuthPage from './features/auth/components/AuthPage'
 import AuthModal from './features/auth/modals/AuthModal'
 import { logout } from './features/auth/api/authApi'
 import { AUTH_EXPIRED_EVENT, clearSession, getUser, setSession } from './helpers/apiHelper'
 import { confirmAction } from './helpers/toolsHelper'
 import useTheme from './hooks/useTheme'
+
+// Halaman berat (editor/viewer Toast UI, dashboard) dimuat saat dibutuhkan
+// agar halaman login & beranda lebih cepat tampil (performa Lighthouse).
+const PublicArticleDetail = lazy(() => import('./features/blog/components/PublicArticleDetail'))
+const AuthorDashboard = lazy(() => import('./features/blog/components/AuthorDashboard'))
+const AdminDashboard = lazy(() => import('./features/admin/components/AdminDashboard'))
+
+const pageFallback = (
+  <div className="flex justify-center py-24" role="status" aria-label="Memuat halaman">
+    <span className="h-10 w-10 animate-spin rounded-full border-4 border-brand/30 border-t-brand" />
+  </div>
+)
 
 // Mengubah pathname peramban menjadi rute SPA.
 export function parseRoute(pathname) {
@@ -130,7 +139,9 @@ export default function App() {
         onToggleTheme={toggleTheme}
         onCycleAccent={cycleAccent}
       />
-      <main>{page}</main>
+      <main>
+        <Suspense fallback={pageFallback}>{page}</Suspense>
+      </main>
       {showLogin && <AuthModal onClose={() => setShowLogin(false)} onLogin={handleLogin} onNavigate={navigate} />}
     </div>
   )

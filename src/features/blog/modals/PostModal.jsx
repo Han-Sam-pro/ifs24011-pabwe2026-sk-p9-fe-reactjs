@@ -50,7 +50,7 @@ export default function PostModal({ initial, onClose, onSave, isDark }) {
             <h2 id="post-modal-title" className="text-lg font-bold">
               {isEdit ? 'Edit Artikel' : 'Tambah Artikel'}
             </h2>
-            <p className="text-xs text-white/75">Tulis dengan Markdown — pratinjau tampil berdampingan.</p>
+            <p className="text-xs text-white/90">Tulis dengan Markdown — pratinjau tampil berdampingan.</p>
           </div>
           <button type="button" onClick={onClose} aria-label="Tutup" className="rounded-lg p-1.5 hover:bg-white/20">
             <IconX size={22} />
@@ -96,7 +96,7 @@ export default function PostModal({ initial, onClose, onSave, isDark }) {
         </div>
 
         <footer className="flex items-center justify-between gap-3 border-t border-slate-200 bg-slate-100 px-6 py-4 dark:border-slate-700 dark:bg-slate-800">
-          <span className="text-xs text-slate-500 dark:text-slate-400" data-testid="word-count">
+          <span className="text-xs text-slate-600 dark:text-slate-300" data-testid="word-count">
             {words} kata · ±{Math.max(1, Math.ceil(words / 200))} menit baca
           </span>
           <div className="flex gap-3">

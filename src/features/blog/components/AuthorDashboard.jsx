@@ -105,7 +105,7 @@ export default function AuthorDashboard({ user, onNavigate, isDark }) {
           </label>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Tabel artikel saya">
           <table className="w-full min-w-[820px] text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800/50 dark:text-slate-400">
               <tr>
@@ -133,7 +133,7 @@ export default function AuthorDashboard({ user, onNavigate, isDark }) {
                   <tr key={post.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
                     <td className="px-4 py-3">
                       <p className="font-semibold">{post.title}</p>
-                      <p className="text-xs text-slate-400">/{post.slug}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">/{post.slug}</p>
                     </td>
                     <td className="px-4 py-3">
                       <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${categoryClass(post.category)}`}>{post.category}</span>
@@ -142,7 +142,7 @@ export default function AuthorDashboard({ user, onNavigate, isDark }) {
                       <label className="inline-flex cursor-pointer items-center gap-2">
                         <input type="checkbox" role="switch" className="peer sr-only" checked={post.is_published} onChange={() => handleToggle(post)} aria-label={`Status publikasi ${post.title}`} />
                         <span className="relative h-6 w-11 rounded-full bg-slate-300 transition after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition peer-checked:bg-emerald-500 peer-checked:after:translate-x-5 dark:bg-slate-600" />
-                        <span className={`text-xs font-semibold ${post.is_published ? 'text-emerald-600' : 'text-amber-600'}`}>{post.is_published ? 'Terbit' : 'Draf'}</span>
+                        <span className={`text-xs font-semibold ${post.is_published ? 'text-emerald-700 dark:text-emerald-400' : 'text-amber-700 dark:text-amber-400'}`}>{post.is_published ? 'Terbit' : 'Draf'}</span>
                       </label>
                     </td>
                     <td className="px-4 py-3 text-slate-500">{readingTimeLabel(post.reading_time)}</td>

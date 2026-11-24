@@ -13,6 +13,12 @@ vi.mock('@toast-ui/editor', () => ({
         this.markdown = md
       })
       this.destroy = vi.fn()
+      const clip = document.createElement('textarea')
+      clip.className = 'toastui-editor-pseudo-clipboard'
+      options.el.appendChild(clip)
+      const more = document.createElement('button')
+      more.className = 'toastui-editor-toolbar-icons more'
+      options.el.appendChild(more)
       editors.push(this)
     }
     getMarkdown() {
@@ -45,6 +51,8 @@ describe('MarkdownEditor', () => {
     expect(editor.options.theme).toBe('light')
     expect(editor.options.previewStyle).toBe('vertical')
     expect(editor.options.toolbarItems).toBe(TOOLBAR_ITEMS)
+    expect(document.querySelector('.toastui-editor-pseudo-clipboard')).toHaveAttribute('aria-label', 'Clipboard editor Markdown')
+    expect(document.querySelector('.toastui-editor-toolbar-icons.more')).toHaveAttribute('aria-label', 'Alat lainnya')
 
     editor.markdown = '# Halo dunia'
     editor.options.events.change()

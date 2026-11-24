@@ -93,7 +93,7 @@ describe('App', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     await user.click(screen.getByText('tutup-modal'))
     await user.click(screen.getByText('buka-artikel'))
-    expect(screen.getByText('Detail halo')).toBeInTheDocument()
+    expect(await screen.findByText('Detail halo')).toBeInTheDocument()
     expect(window.location.pathname).toBe('/posts/halo')
 
     act(() => {
@@ -114,7 +114,7 @@ describe('App', () => {
     expect(screen.queryByText('Halaman Publik')).not.toBeInTheDocument()
     await user.click(screen.getByText('login-member'))
     expect(window.location.pathname).toBe('/author')
-    expect(screen.getByText('Workspace Budi')).toBeInTheDocument()
+    expect(await screen.findByText('Workspace Budi')).toBeInTheDocument()
   })
 
   it('tamu di /posts/:slug juga melihat login', () => {
@@ -133,7 +133,7 @@ describe('App', () => {
     expect(screen.getByTestId('auth-page')).toHaveAttribute('data-home', 'true')
     await user.click(screen.getByText('login-member'))
     expect(window.location.pathname).toBe('/author')
-    expect(screen.getByText('Workspace Budi')).toBeInTheDocument()
+    expect(await screen.findByText('Workspace Budi')).toBeInTheDocument()
     expect(getToken()).toBe('tok-m')
   })
 
@@ -153,7 +153,7 @@ describe('App', () => {
     await user.click(screen.getByText('Masuk'))
     await user.click(screen.getByText('login-admin'))
     expect(window.location.pathname).toBe('/admin')
-    expect(screen.getByText('Panel Admin')).toBeInTheDocument()
+    expect(await screen.findByText('Panel Admin')).toBeInTheDocument()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
@@ -169,7 +169,7 @@ describe('App', () => {
     setSession('tok', member)
     goTo('/author')
     render(<App />)
-    expect(screen.getByText('Workspace Budi')).toBeInTheDocument()
+    expect(await screen.findByText('Workspace Budi')).toBeInTheDocument()
 
     Swal.fire.mockResolvedValueOnce({ isConfirmed: false })
     await user.click(screen.getByLabelText('Keluar'))

@@ -43,6 +43,14 @@ export default function MarkdownEditor({ value, onChange, dark = false, height =
       },
     })
     editorRef.current = editor
+    // Elemen internal Toast UI tanpa nama aksesibel (pelanggaran axe "label"/"button-name").
+    containerRef.current.querySelectorAll('.toastui-editor-pseudo-clipboard').forEach((el) => {
+      el.setAttribute('aria-label', 'Clipboard editor Markdown')
+      el.setAttribute('tabindex', '-1')
+    })
+    containerRef.current.querySelectorAll('.toastui-editor-toolbar-icons.more').forEach((el) => {
+      el.setAttribute('aria-label', 'Alat lainnya')
+    })
     return () => editor.destroy()
   }, [dark, height, placeholder])
 

@@ -31,7 +31,7 @@ export function PostsTable({ posts, onNavigate, showAuthor = true }) {
     return <p className="px-4 py-10 text-center text-sm text-slate-500">Belum ada artikel.</p>
   }
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Tabel artikel">
       <table className="w-full min-w-[760px] text-left text-sm">
         <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800/50 dark:text-slate-400">
           <tr>
@@ -104,7 +104,7 @@ export default function AdminDashboard({ onNavigate }) {
   const totalPublished = posts.filter((p) => p.is_published).length
 
   const tabClass = (name) =>
-    `rounded-lg px-4 py-2 text-sm font-semibold transition ${tab === name ? 'bg-brand text-white' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`
+    `rounded-lg px-4 py-2 text-sm font-semibold ${tab === name ? 'bg-brand text-white' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`
 
   return (
     <div className="w-full space-y-6 px-4 py-8 sm:px-6 lg:px-10">
@@ -153,7 +153,7 @@ export default function AdminDashboard({ onNavigate }) {
           {loading ? (
             <p className="px-4 py-10 text-center text-sm text-slate-500">Memuat data...</p>
           ) : tab === 'users' ? (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Tabel pengguna">
               <table className="w-full min-w-[760px] text-left text-sm">
                 <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800/50 dark:text-slate-400">
                   <tr>

@@ -25,11 +25,11 @@ export function ArticleCard({ post, onOpen }) {
             <IconClock size={14} /> {readingTimeLabel(post.reading_time)}
           </span>
         </div>
-        <h3 className="font-serif text-xl font-bold leading-snug">
+        <h2 className="font-serif text-xl font-bold leading-snug">
           <button type="button" onClick={() => onOpen(post.slug)} className="text-left group-hover:text-brand">
             {post.title}
           </button>
-        </h3>
+        </h2>
         <p className="line-clamp-3 flex-1 text-sm text-slate-600 dark:text-slate-400">{post.excerpt || 'Tidak ada ringkasan.'}</p>
         <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
           <span className="flex items-center gap-1">

@@ -45,7 +45,7 @@ export default function AiPostGeneratorModal({ onClose, onApply, isDark }) {
             <IconSparkles size={26} />
             <div>
               <h2 id="ai-modal-title" className="text-lg font-bold">AI Blog Generator</h2>
-              <p className="text-xs text-white/75">Draf artikel lengkap berbasis fakta terkini dari mesin pencari.</p>
+              <p className="text-xs text-white/90">Draf artikel lengkap berbasis fakta terkini dari mesin pencari.</p>
             </div>
           </div>
           <button type="button" onClick={onClose} aria-label="Tutup" className="rounded-lg p-1.5 hover:bg-white/20">

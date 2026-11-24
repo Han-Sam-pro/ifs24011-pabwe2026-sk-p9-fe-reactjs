@@ -153,7 +153,7 @@ export default function AuthPage({ mode, onLogin, onNavigate, showHomeLink = tru
           <h2 className="font-serif text-4xl font-bold leading-tight">Tulis gagasanmu, bagikan ke dunia.</h2>
           <p className="text-white/80">Editor Markdown modern, AI Content Generator yang terhubung dengan mesin pencari, dan statistik tulisan dalam satu ruang kerja.</p>
         </div>
-        <p className="relative text-sm text-white/60">© {new Date().getFullYear()} Delcom Blog</p>
+        <p className="relative text-sm text-white/85">© {new Date().getFullYear()} Delcom Blog</p>
       </aside>
 
       <main className="flex flex-1 items-center justify-center p-6">
